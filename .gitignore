@@ -3,6 +3,7 @@ miniapps/
 
 # Python bytecode
 __pycache__/
+.idea/
 *.pyc
 *.pyo
 
