@@ -1,0 +1,19 @@
+# Virtual environment
+miniapp/
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment variables
+.env
+
+# Django-related
+# db.sqlite3
+media/
+staticfiles/
+
+# Logs
+*.log
+
