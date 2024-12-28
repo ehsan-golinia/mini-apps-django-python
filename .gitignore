@@ -1,5 +1,5 @@
 # Virtual environment
-miniapp/
+miniapps/
 
 # Python bytecode
 __pycache__/
