@@ -34,4 +34,4 @@ def dice_rolling_game(request):
         'range_dice': range(dice_count),
         'roll_time': roll_time
     }
-    return render(request, 'dice_rolling_game.html', context)
+    return render(request, 'dice-rolling-game.html', context)

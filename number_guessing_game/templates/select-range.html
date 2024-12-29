@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<style>
+    .range-container {
+        background: #f8f9fa;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        padding: 10px 15px;
+        font-size: 16px;
+        border: 2px solid #ccc;
+    }
+
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
+        outline: none;
+    }
+
+    .btn-primary {
+        background: #0d6efd;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 18px;
+    }
+
+    .btn-primary:hover {
+        background: #0b5ed7;
+    }
+</style>
+{% endblock %}
+
+{% block title %}Select Number Range{% endblock %}
+
+{% block content %}
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+    <div class="range-container text-center">
+        <h2 class="mb-4">Choose Your Number Range</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="minNumber" class="form-label">Minimum Number:</label>
+                <input type="number" id="minNumber" min="0" max="9999" name="min_number" class="form-control" placeholder="Enter minimum number" required>
+            </div>
+            <div class="mb-4">
+                <label for="maxNumber" class="form-label">Maximum Number:</label>
+                <input type="number" id="maxNumber" min="0" max="9999" name="max_number" class="form-control" placeholder="Enter maximum number" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="maxTryRange">Maximum Try: <span id="maxTryDisplay" class="text-success">5</span></label>
+                <input type="range" class="form-range" id="maxTryRange" min="1" max="10" value="5" name="max_try" required
+                       oninput="updateMaxTryDisplay(this.value)">
+            </div>
+            {% if error_message %}
+            <div class="mb-4">
+                <span id="errorMessage" class="text-danger">{{ error_message }}</span>
+            </div>
+            {% endif %}
+            <button type="submit" class="btn btn-primary">Start Guessing Game</button>
+
+
+        </form>
+        <script>
+            function updateMaxTryDisplay(value) {
+                const display = document.getElementById('maxTryDisplay');
+                display.textContent = value; // Update the display with the current slider value
+            }
+        </script>
+    </div>
+</div>
+{% endblock %}

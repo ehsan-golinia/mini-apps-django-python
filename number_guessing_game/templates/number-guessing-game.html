@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<style>
+    .game-container {
+        background: #f8f9fa;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        padding: 10px 15px;
+        font-size: 16px;
+        border: 2px solid #ccc;
+    }
+
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
+        outline: none;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 18px;
+        margin-top: 10px;
+    }
+
+    .btn-primary {
+        background: #0d6efd;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background: #0b5ed7;
+    }
+
+    .btn-success {
+        background: #198754;
+        border: none;
+    }
+
+    .btn-success:hover {
+        background: #157347;
+    }
+
+    .message {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block title %}Number Guessing Game{% endblock %}
+
+{% block content %}
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+    <div class="game-container text-center">
+        {% if not finished %}
+            <h2 class="mb-4">Guess the Number!</h2>
+        <p class="text-muted">Guess a number between <span class="text-success">{{ min_number }}</span> and <span class="text-success">{{ max_number }}</span>.</p>
+        {% endif %}
+
+        {% if nomore_try %}
+        <p class="message text-primary">{{ message }}</p>
+        {% elif finished %}
+            <h1 class="mb-4">🎉</h1>
+            <p class="message text-success">{{ message }}</p>
+        {% else %}
+            <p class="message text-danger">{{ message }}</p>
+        {% endif %}
+
+        {% if not finished %}
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <input type="number" name="guess" min="{{ min_number }}" max="{{ max_number }}" class="form-control" placeholder="Enter your guess" required>
+                </div>
+                <p>Your attempt <span class="text-success">{{ current_try }}</span> out of <span class="text-success">{{ max_try }}</span></p>
+                <button type="submit" class="btn btn-primary">Submit Guess</button>
+            </form>
+        {% else %}
+            <p>Your attempt <span class="text-success">{{ current_try }}</span> out of <span class="text-success">{{ max_try }}</span></p>
+            <button onclick="location.href='{% url 'guessing_range' %}'" class="btn btn-success">Play Again</button>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
