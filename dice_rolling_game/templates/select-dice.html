@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+
+{% block style %}
+<style>
+    .select-container {
+        background: #f8f9fa;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        max-width: 400px;
+        width: 100%;
+    }
+
+    .form-range::-webkit-slider-thumb {
+        background: #0d6efd;
+    }
+
+    .dice-preview {
+        width: 40px;
+        height: 40px;
+        background: white;
+        border-radius: 8px;
+        border: 2px solid #ccc;
+        margin: 5px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    .dot {
+        width: 8px;
+        height: 8px;
+        background: black;
+        border-radius: 50%;
+        position: absolute;
+    }
+
+    /* Dot positions */
+    .center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .top-left { top: 20%; left: 20%; }
+    .top-right { top: 20%; right: 20%; }
+    .bottom-left { bottom: 20%; left: 20%; }
+    .bottom-right { bottom: 20%; right: 20%; }
+    .middle-left { top: 50%; left: 20%; transform: translateY(-50%); }
+    .middle-right { top: 50%; right: 20%; transform: translateY(-50%); }
+</style>
+{% endblock %}
+
+{% block title %}Select Number of Dice{% endblock %}
+
+{% block content %}
+<div class="container vh-100 d-flex align-items-center justify-content-center">
+    <div class="select-container text-center">
+        <h2 class="mb-4">How many dice would you like to roll?</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="diceRange"></label><input type="range" class="form-range"
+                                                      min="1" max="6" value="1"
+                                                      id="diceRange" name="dice_count"
+                                                      oninput="updatePreview(this.value)">
+                <div class="mt-2">
+                    <span id="diceCount">1</span> dice
+                </div>
+            </div>
+
+            <div id="dicePreview" class="d-flex justify-content-center flex-wrap m-2">
+                <div class="dice-preview">
+                    <div class="dot center"></div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg">
+                Start Game
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function updatePreview(value) {
+        const preview = document.getElementById('dicePreview');
+        const count = document.getElementById('diceCount');
+
+        // Update counter
+        count.textContent = value;
+
+        // Update preview
+        preview.innerHTML = '';
+        for (let i = 1; i <= value; i++) {
+            const dice = document.createElement('div');
+            dice.className = 'dice-preview';
+
+            // Generate dots for the dice
+            const dots = generateDots(i);
+            dots.forEach(dotClass => {
+                const dot = document.createElement('div');
+                dot.className = `dot ${dotClass}`;
+                dice.appendChild(dot);
+            });
+
+            preview.appendChild(dice);
+        }
+    }
+
+    function generateDots(diceValue) {
+        switch (diceValue) {
+            case 1: return ['center'];
+            case 2: return ['top-left', 'bottom-right'];
+            case 3: return ['top-left', 'center', 'bottom-right'];
+            case 4: return ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
+            case 5: return ['top-left', 'top-right', 'center', 'bottom-left', 'bottom-right'];
+            case 6: return ['top-left', 'top-right', 'middle-left', 'middle-right', 'bottom-left', 'bottom-right'];
+            default: return [];
+        }
+    }
+</script>
+{% endblock %}

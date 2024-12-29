@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+
+{% block style %}
+<style>
+    .dice {
+        width: 80px;
+        height: 80px;
+        background: white;
+        border-radius: 10px;
+        border: 2px solid #ccc;
+        margin: 20px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        position: relative;
+        display: grid;
+        grid-template-areas:
+            "a . c"
+            "e g f"
+            "d . b";
+        padding: 10px;
+    }
+
+    .dot {
+        width: 15px;
+        height: 15px;
+        background: #333;
+        border-radius: 50%;
+        align-self: center;
+        justify-self: center;
+    }
+
+    /* Dot positions */
+    .dot:nth-child(1) { grid-area: a; }
+    .dot:nth-child(2) { grid-area: b; }
+    .dot:nth-child(3) { grid-area: c; }
+    .dot:nth-child(4) { grid-area: d; }
+    .dot:nth-child(5) { grid-area: e; }
+    .dot:nth-child(6) { grid-area: f; }
+    .dot:nth-child(7) { grid-area: g; }
+
+    .dice[data-value="1"] .dot:not(:nth-child(7)) { display: none; }
+    .dice[data-value="2"] .dot:not(:nth-child(1), :nth-child(2)) { display: none; }
+    .dice[data-value="3"] .dot:not(:nth-child(1), :nth-child(7), :nth-child(2)) { display: none; }
+    .dice[data-value="4"] .dot:not(:nth-child(1), :nth-child(2), :nth-child(4), :nth-child(3)) { display: none; }
+    .dice[data-value="5"] .dot:not(:nth-child(1), :nth-child(2), :nth-child(7), :nth-child(4), :nth-child(3)) { display: none; }
+    .dice[data-value="6"] .dot:not(:nth-child(1), :nth-child(2), :nth-child(4), :nth-child(3), :nth-child(5), :nth-child(6)) { display: none; }
+
+    @keyframes rolling {
+        0% { transform: rotateX(0deg) rotateY(0deg); }
+        25% { transform: rotateX(90deg) rotateY(90deg); }
+        50% { transform: rotateX(180deg) rotateY(180deg); }
+        75% { transform: rotateX(270deg) rotateY(270deg); }
+        100% { transform: rotateX(360deg) rotateY(360deg); }
+    }
+
+    .roll-animation {
+        animation: rolling 0.5s linear;
+    }
+
+    .game-container {
+        background: #f8f9fa;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+
+    .dice-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .roll-button {
+        min-width: 150px;
+        transition: transform 0.2s;
+    }
+
+    .roll-button:active {
+        transform: scale(0.95);
+    }
+
+    .back-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block title %}Dice Rolling Game{% endblock %}
+
+{% block content %}
+
+    <div class="container vh-100 d-flex align-items-center justify-content-center">
+        <div class="game-container text-center">
+            <h1 class="mb-4">Dice Rolling Game</h1>
+
+            <div class="dice-container m-4">
+                {% for value in dice_values %}
+                <div class="dice roll-animation" data-value="{{ value }}">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-lg roll-button">
+                    Roll Dice
+                </button>
+            </form>
+
+            <div class="mt-4">
+                <h3>Sum: <span id="total">{{ total }}</span></h3>
+            </div>
+            <div class="mt-4">
+                <h3>Rolled: <span id="total">{{ roll_time }}</span>
+                {% if roll_time > 1 %}
+                    times
+                {% else %}
+                    time
+                {% endif %}
+                </h3>
+            </div>
+            <a href="{% url 'select_dice' %}" class="btn btn-outline-success m-3">
+                Change Dice Count
+            </a>
+        </div>
+    </div>
+{% endblock %}
