@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    <style>
+        .form-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            color: #333;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}Player Settings{% endblock %}
+
+{% block content %}
+<div class="container vh-100">
+    <div class="form-container bg-white">
+        <h1 class="page-title">Player Settings</h1>
+
+        <form method="POST" action="" class="needs-validation" novalidate>
+            {% csrf_token %}
+
+            <div class="mb-4">
+                <label for="player_name" class="form-label">Player Name:</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="player_name"
+                    name="player_name"
+                    placeholder="Enter your name"
+                    required
+                >
+                <div class="invalid-feedback">
+                    Please enter your name.
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="winner_score" class="form-label">Maximum Score to Win:</label>
+                <input
+                    type="number"
+                    class="form-control"
+                    id="winner_score"
+                    name="winner_score"
+                    placeholder="Enter max score (e.g., 3)"
+                    min="1"
+                    max="10"
+                    required
+                >
+                <div class="invalid-feedback">
+                    Please enter a score between 1 and 10.
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg px-5">
+                    Start Game
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Bootstrap form validation
+(function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+</script>
+{% endblock %}

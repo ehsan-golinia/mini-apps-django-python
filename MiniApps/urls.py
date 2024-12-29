@@ -23,4 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('dice-rolling-game/', include('dice_rolling_game.urls')),
     path('number-guessing-game/', include('number_guessing_game.urls')),
+    path('rock-paper-scissors-game/', include('rock_paper_scissors.urls')),
 ]

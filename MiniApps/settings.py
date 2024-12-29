@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'dice_rolling_game.apps.DiceRollingGameConfig',
     'number_guessing_game.apps.NumberGuessingGameConfig',
+    'rock_paper_scissors.apps.RockPaperScissorsConfig',
 ]
 
 MIDDLEWARE = [

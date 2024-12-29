@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+
+{% block style %}
+<style>
+    .game-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        background-color: white;
+    }
+
+    .scoreboard {
+        display: flex;
+        justify-content: space-between;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .player-card, .computer-card {
+        flex: 1;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .choice {
+        font-size: 4rem;
+        margin: 1rem 0;
+        min-height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .game-buttons {
+        margin: 2rem 0;
+    }
+
+    .game-button {
+        font-size: 1.2rem;
+        padding: 1rem 2rem;
+        margin: 0.5rem;
+        border: none;
+        border-radius: 10px;
+        transition: transform 0.2s;
+    }
+
+    .game-button:hover {
+        transform: scale(1.05);
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .result-text {
+        font-size: 1.2rem;
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block title %}Rock Paper Scissors Game{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="game-container">
+        <h1 class="text-center mb-4">Rock Paper Scissors</h1>
+
+        <div class="scoreboard">
+            <div class="computer-card bg-light">
+                <h2 class="h4">Computer</h2>
+                <div class="badge bg-warning fs-5 mb-3">Score: {{ computer_score }}</div>
+                {% if round_result %}
+                    <h1 class="text-center">{{ round_result.computer_choice }}</h1>
+                {% endif %}
+            </div>
+
+            <div class="player-card bg-light">
+                <h2 class="h4">{{ player_name }}</h2>
+                <div class="badge bg-primary fs-5 mb-3">Score: {{ player_score }}</div>
+                {% if round_result %}
+                    <h1 class="text-center">{{ round_result.player_choice }}</h1>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if not game_finished %}
+        <div class="text-center">
+            <form method="GET" class="d-inline">
+                <button type="submit" name="player_choice" value="r" class="game-button btn btn-outline-primary">
+                    🪨 Rock
+                </button>
+                <button type="submit" name="player_choice" value="p" class="game-button btn btn-outline-primary">
+                    📰 Paper
+                </button>
+                <button type="submit" name="player_choice" value="s" class="game-button btn btn-outline-primary">
+                    ✂️ Scissors
+                </button>
+            </form>
+        </div>
+        {% else %}
+            {% if player_score >= winner_score %}
+                <div class="result-text text-center text-success">
+                    {{ final_result }}
+                </div>
+            {% else %}
+                <div class="result-text text-center text-danger">
+                    {{ final_result }}
+                </div>
+            {% endif %}
+        {% endif %}
+
+        <div class="text-center">
+            First to score {{ winner_score }} points wins!
+        </div>
+        <div class="action-buttons">
+            <form method="POST" action="{% url 'player_settings' %}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">New Game</button>
+            </form>
+            <form method="POST" action="/" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">End Game</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
